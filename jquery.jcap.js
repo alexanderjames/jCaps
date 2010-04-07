@@ -596,7 +596,6 @@
 			var stopAt = null;
             context.bind('timeupdate', function(){
                 var now = this.currentTime;
-				console.log(now);
                 $.each(captions, function(i, captionSet){
                     if(now >= captionSet[1] && now <= captionSet[2]){
                         var newCaption = captionSet;
