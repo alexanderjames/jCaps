@@ -591,9 +591,9 @@
                 div.appendTo($('#jCapsWrapper'));
             }
             
+            var currentText = '';
             context.bind('timeupdate', function(){
                 var now = this.currentTime;
-                var currentText = '';
                 
                 $.each(captions, function(i, captionSet){
                     if(now >= captionSet[1] && now <= captionSet[2]){
