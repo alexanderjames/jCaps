@@ -304,7 +304,8 @@
         transcriptButton: true,
         showCaptions: false, // Captions are hidden by default, must be explicitly turned on
         switchOnCallback: function(){}, // called immediately after subtitles are switched on
-        switchOffCallback: function(){} // called immediately after subtitles are switched off
+        switchOffCallback: function(){}, // called immediately after subtitles are switched off
+        subtitleChangeCallback: null// function(oldcaptionSet, captionSetcaptionSet){} // called immediately when a subtitle change
     };    
     
 
@@ -591,19 +592,31 @@
                 div.appendTo($('#jCapsWrapper'));
             }
             
-            var currentText = '';
+            var currentCaption = ['',0,0];
+			var stopAt = null;
             context.bind('timeupdate', function(){
                 var now = this.currentTime;
-                
+				console.log(now);
                 $.each(captions, function(i, captionSet){
                     if(now >= captionSet[1] && now <= captionSet[2]){
-                        var newText = captionSet[0];
-                        if(newText !== currentText){
-                            currentText = newText;
-                            $('#captions').text(newText);
+                        var newCaption = captionSet;
+                        if(newCaption !== currentCaption){
+							if(typeof config.subtitleChangeCallback === 'function') {
+								config.subtitleChangeCallback.call(this,currentCaption,newCaption);
+							}
+                            currentCaption = newCaption;
+							stopAt = newCaption[2]-1+2;
+                            $('#captions').text(newCaption[0]);
                             return true;
                         }
-                    }
+                    } else if (stopAt && now >= stopAt) {
+						if(typeof config.subtitleChangeCallback === 'function') {
+							config.subtitleChangeCallback.call(this,currentCaption,['']);
+							currentCaption = ['',0,0];
+						}
+						stopAt = null;
+						$('#captions').text('');
+					}
                 });
                 
                 // todo - this is horribly inefficient - track state of subtitles differently

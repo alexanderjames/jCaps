@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <!--
+    * jCaps - jQuery plugin for caption support in HTML5 video.
+    * Based on an implementation by Bruce Lawson, Philip Jägenstedt, and Daniel Davis:
+    * http://dev.opera.com/articles/view/accessible-html5-video-with-javascripted-captions/
+    *
+    * http://www.360innovate.co.uk / John McCollum
+    *
+    * Licensed under the Creative Commons BSD Licence, as per original work
+    * http://creativecommons.org/licenses/BSD/
+    *
+    * Version: 0.19 (.srt but scraggy)
+    -->
+    <title>jCaps plugin example (HTML)</title>
+    <meta charset=utf-8>
+        
+    <link href="styles.css" rel="stylesheet" />    
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+    <script src="jquery.jcap.js"></script>
+    
+    <script>
+        $(function(){
+			var addShown = false;
+            $("#myVid").jCaps({
+		        language: 'en',
+		        languageChooser: false,
+		        toggleButton: false,
+		        onButton: false,
+		        offButton: false,
+		        interfaceImg: false,
+		        transcriptButton:false,
+		        showCaptions: true,
+				transcriptType: 'html',
+				transcriptsDiv: $('#transcripts'),
+				subtitleChangeCallback:function(oldV,newV) {
+					if(!addShown) {
+						addShown = true;
+						$('#myVid').get(0).pause();
+						setTimeout(function(){
+							$('#captions').text('');
+							$('#myVid').get(0).play();
+						},5*1000);
+					}
+				}
+			});
+        });        
+    </script>
+    <!-- uncomment this line to run tests. Be aware that this actually breaks the plugin at the moment! (Specifically, the testDivClick() function)-->
+    <!--<script src="tests.js"></script>-->
+</head>
+<body>
+    <h1>HTML5 Video with JavaScripted synchronised captions: demo</h1>
+    <p>If your browser has JavaScript enabled, synchronised captions will appear on the Video. Otherwise, a plaintext transcript with time markers will display below it.</p>
+    
+    <p>This demonstration supplements the <a href="#">360innovate blog post</a>, and builds on work by Bruce Lawson, Philip Jägenstedt, and Daniel Davis. It reimplements their work as a jQuery plugin which aims to give front-end developers a consistent and easy to use API.</p>
+    <div>
+	
+    </div>
+    
+    <video id="myVid" width="400" autobuffer controls> 
+		<source src="leverage-a-synergy.mp4">
+		<source src="leverage-a-synergy.ogv">
+        <p>This page is to demonstrate open HTML5 video, so if you're not using a browser that can display the open Ogg Theora codec, there's not much to see. Sorry!</p> 
+    </video>
+
+    
+    <div id="transcripts"> 
+		<div lang="en">
+			<h3>Transcript</h3> 
+			<p> 
+			<span data-begin=2 data-end=3>My add shows here</span> 
+			</p> 
+		</div>
+	</div> 
+</body>
+</html>
